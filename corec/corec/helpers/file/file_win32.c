@@ -510,6 +510,8 @@ static err_t CreateFunc(node* UNUSED_PARAM(p))
 	CEShellDLL = LoadLibrary(T("ceshell.dll"));
 	if (CEShellDLL)
 		*(FARPROC*)(void*)&FuncSHFileOperation = GetProcAddress(CEShellDLL,MAKEINTRESOURCE(14));
+#elif defined(ENABLE_MICROSOFT_STORE_APP)
+    FuncSHFileOperation = NULL;
 #elif defined(WINDOWS_DESKTOP)
     FuncSHFileOperation = SHFileOperation;
 #endif
