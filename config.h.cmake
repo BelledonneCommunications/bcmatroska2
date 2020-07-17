@@ -4,4 +4,3 @@
 #cmakedefine CONFIG_STDIO
 #cmakedefine CONFIG_FILEPOS_64
 #cmakedefine CONFIG_DEBUG_LEAKS
-#cmakedefine ENABLE_MICROSOFT_STORE_APP
