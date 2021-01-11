@@ -39,6 +39,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shellapi.h>
+#include <fileapi.h>
 
 #ifndef FO_DELETE
 #define FO_DELETE   3
@@ -52,6 +53,8 @@ static HMODULE CEShellDLL = NULL;
 #endif
 #ifdef WINDOWS_DESKTOP
 static int (WINAPI* FuncSHFileOperation)(SHFILEOPSTRUCT*) = NULL;
+#else
+static void *FuncSHFileOperation = NULL;
 #endif
 
 #ifndef ERROR_INVALID_DRIVE_OBJECT

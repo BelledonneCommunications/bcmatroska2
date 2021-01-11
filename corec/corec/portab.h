@@ -400,7 +400,7 @@ typedef uint64_t uint_fast64_t;
 
 #endif /* _MSC_VER */
 
-#if !defined(_STDINT_H) && !defined(_STDINT_H_) && !defined(_UINT64_T_DECLARED) && !defined(_STDINT_H_INCLUDED) // could be used elsewhere
+#if !defined(_STDINT_H) && !defined(_STDINT_H_) && !defined(_STDINT) && !defined(_UINT64_T_DECLARED) && !defined(_STDINT_H_INCLUDED) // could be used elsewhere
 
 typedef signed int int32_t;
 typedef unsigned int uint32_t;
