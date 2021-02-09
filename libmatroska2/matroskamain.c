@@ -579,18 +579,20 @@ timecode_t MATROSKA_ClusterTimecodeScale(matroska_cluster *Cluster, bool_t Read)
 
 err_t MATROSKA_BlockSetTimecode(matroska_block *Block, timecode_t Timecode, timecode_t ClusterTimecode)
 {
-	int64_t InternalTimecode;
-    assert(Node_IsPartOf(Block,MATROSKA_BLOCK_CLASS));
-    assert(Timecode!=INVALID_TIMECODE_T);
+	int64_t InternalTimecode = 32767;
+	assert(Node_IsPartOf(Block,MATROSKA_BLOCK_CLASS));
+	assert(Timecode!=INVALID_TIMECODE_T);
 #if defined(CONFIG_EBML_WRITING)
-	InternalTimecode = Scale64(Timecode - ClusterTimecode,1,(int64_t)(MATROSKA_SegmentInfoTimecodeScale(Block->WriteSegInfo) * MATROSKA_TrackTimecodeScale(Block->WriteTrack)));
+	if( Block->WriteSegInfo && Block->WriteTrack)
+		InternalTimecode = Scale64(Timecode - ClusterTimecode,1,(int64_t)(MATROSKA_SegmentInfoTimecodeScale(Block->WriteSegInfo) * MATROSKA_TrackTimecodeScale(Block->WriteTrack)));
 #else
-	InternalTimecode = Scale64(Timecode - ClusterTimecode,1,(int64_t)(MATROSKA_SegmentInfoTimecodeScale(Block->ReadSegInfo) * MATROSKA_TrackTimecodeScale(Block->ReadTrack)));
+	if( Block->ReadSegInfo && Block->ReadTrack)
+		InternalTimecode = Scale64(Timecode - ClusterTimecode,1,(int64_t)(MATROSKA_SegmentInfoTimecodeScale(Block->ReadSegInfo) * MATROSKA_TrackTimecodeScale(Block->ReadTrack)));
 #endif
 	if (InternalTimecode > 32767 || InternalTimecode < -32768)
 		return ERR_INVALID_DATA;
 	Block->LocalTimecode = (int16_t)InternalTimecode;
-    Block->LocalTimecodeUsed = 1;
+	Block->LocalTimecodeUsed = 1;
 	return ERR_NONE;
 }
 
@@ -658,6 +660,12 @@ void MATROSKA_BlockSetKeyframe(matroska_block *Block, bool_t Set)
 {
     assert(Node_IsPartOf(Block,MATROSKA_BLOCK_CLASS));
 	Block->IsKeyframe = Set;
+}
+
+void MATROSKA_BlockSetTrackNum(matroska_block *Block, int16_t TrackNum)
+{
+	assert(Node_IsPartOf(Block,MATROSKA_BLOCK_CLASS));
+	Block->TrackNumber = TrackNum;
 }
 
 void MATROSKA_BlockSetDiscardable(matroska_block *Block, bool_t Set)

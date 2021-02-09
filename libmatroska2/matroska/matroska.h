@@ -180,6 +180,7 @@ EBML_DLL ebml_element *MATROSKA_BlockWriteSegmentInfo(const matroska_block *Bloc
 
 EBML_DLL err_t MATROSKA_BlockSkipToFrame(const matroska_block *Block, stream *Input, size_t FrameNum);
 EBML_DLL void MATROSKA_BlockSetKeyframe(matroska_block *Block, bool_t Set);
+EBML_DLL void MATROSKA_BlockSetTrackNum(matroska_block *Block, int16_t TrackNum);
 EBML_DLL void MATROSKA_BlockSetDiscardable(matroska_block *Block, bool_t Set);
 EBML_DLL err_t MATROSKA_BlockProcessFrameDurations(matroska_block *Block, stream *Input);
 EBML_DLL size_t MATROSKA_BlockGetFrameCount(const matroska_block *Block);
