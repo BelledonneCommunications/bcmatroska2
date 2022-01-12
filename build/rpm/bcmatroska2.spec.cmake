@@ -21,6 +21,8 @@ License:        BSD-3
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
+Requires:	%{pkg_prefix}bctoolbox
+
 %description
 A libary to parse Matroska files (.mkv and .mka).
 

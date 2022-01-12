@@ -53,6 +53,7 @@ else()
 	list(APPEND COREC_SOURCES
 		helpers/date/date_libc.c
 		helpers/file/file_libc.c
+		helpers/file/file_bctbx.c
 		multithread/multithread_pthread.c
 	)
 	if (NOT IOS) 
@@ -91,6 +92,7 @@ endif()
 
 add_library(corec-objects OBJECT ${COREC_SOURCES})
 set_target_properties(corec-objects PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+target_link_libraries(corec-objects bctoolbox)
 
 install(FILES
 	banned.h

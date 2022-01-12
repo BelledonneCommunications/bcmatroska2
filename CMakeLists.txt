@@ -45,6 +45,8 @@ endif()
 
 configure_file(config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 
+find_package(bctoolbox REQUIRED CONFIG)
+
 include_directories(
 	${CMAKE_BINARY_DIR}
 	corec

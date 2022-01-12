@@ -11,7 +11,7 @@ GROUP file
   SOURCE streams.c {class Streams_Class:1}
   SOURCE tools.c
 
-  SOURCE(TARGET_LINUX || TARGET_OSX || TARGET_ANDROID) file_libc.c {class File_Class:1}
+  SOURCE(TARGET_LINUX || TARGET_OSX || TARGET_ANDROID) file_bctbx.c {class File_Class:1}
   SOURCE(TARGET_PALMOS) file_palmos.c {class File_Class:1}
   SOURCE(TARGET_PALMOS) filedb_palmos.c {class FileDb_Class:1}
   SOURCE(TARGET_PALMOS) filevfs_palmos.c {class VFS_Class:1}
