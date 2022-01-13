@@ -44,7 +44,7 @@ if(WIN32)
 	list(APPEND COREC_SOURCES
 		helpers/charconvert/charconvert_win32.c
 		helpers/date/date_win32.c
-		helpers/file/file_win32.c
+		helpers/file/file_bctbx_win32.c
 		helpers/system/ccsystem_win32.c
 		multithread/multithread_win32.c
 		str/str_win32.c
