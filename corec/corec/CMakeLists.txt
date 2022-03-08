@@ -92,7 +92,8 @@ endif()
 
 add_library(corec-objects OBJECT ${COREC_SOURCES})
 set_target_properties(corec-objects PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-target_link_libraries(corec-objects bctoolbox)
+target_include_directories(corec-objects PRIVATE
+                $<TARGET_PROPERTY:bctoolbox,INTERFACE_INCLUDE_DIRECTORIES>)
 
 install(FILES
 	banned.h
