@@ -115,8 +115,20 @@ static err_t Open(filestream* p, const tchar_t* URL, int Flags)
 		if (Flags & SFLAG_CREATE)
 			mode |= O_CREAT|O_TRUNC;
 
-		//TODO: verify it works with Unicode files too
+		//bctbx_file_open2 doesn't work with Unicode files
+#ifdef UNICODE
+		char fileStr[1024];
+		memset(fileStr, 0, 1024);
+#ifdef _WIN32
+		WideCharToMultiByte(CP_ACP, 0, URL, -1, fileStr, sizeof(fileStr), 0, 0);
+#else
+		wcstombs(fileStr, URL, 1024);
+#endif
+		p->fp = bctbx_file_open2(bctbx_vfs_get_default(), fileStr, mode);
+#else
 		p->fp = bctbx_file_open2(bctbx_vfs_get_default(), URL, mode);
+#endif
+
 		if (p->fp == NULL)
 		{
 			if ((Flags & (SFLAG_REOPEN|SFLAG_SILENT))==0)
