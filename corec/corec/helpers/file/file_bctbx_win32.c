@@ -104,6 +104,20 @@ static err_t Open(filestream* p, const tchar_t* URL, int Flags)
 	{
 		struct stat file_stats;
 		int mode = 0;
+#ifdef UNICODE
+		char url_buffer[1024];
+		memset(url_buffer, 0, sizeof(url_buffer));
+#ifdef _WIN32
+		if(WideCharToMultiByte(CP_ACP, 0, URL, -1, url_buffer, sizeof(url_buffer), 0, 0) == 0) {
+#else
+		if (wcstombs_s(&return_length, url_buffer, sizeof(url_buffer), URL, sizeof(url_buffer) - 1) != 0) {
+#endif
+			NodeReportError(p, NULL, ERR_ID, ERR_INVALID_PARAM, URL);
+			return ERR_INVALID_PARAM;
+		}
+#else
+		const char* url_buffer = URL;
+#endif
 
 		if (Flags & SFLAG_WRONLY && !(Flags & SFLAG_RDONLY))
 			mode = O_WRONLY;
@@ -115,20 +129,17 @@ static err_t Open(filestream* p, const tchar_t* URL, int Flags)
 		if (Flags & SFLAG_CREATE)
 			mode |= O_CREAT|O_TRUNC;
 
-		//TODO: verify it works with Unicode files too
-		p->fp = bctbx_file_open2(bctbx_vfs_get_default(), URL, mode);
+		p->fp = bctbx_file_open2(bctbx_vfs_get_default(), url_buffer, mode);
 		if (p->fp == NULL)
 		{
 			if ((Flags & (SFLAG_REOPEN|SFLAG_SILENT))==0)
-				NodeReportError(p,NULL,ERR_ID,ERR_FILE_NOT_FOUND,URL);
+				NodeReportError(p,NULL,ERR_ID,ERR_FILE_NOT_FOUND, url_buffer);
 			return ERR_FILE_NOT_FOUND;
 		}
 
 		tcscpy_s(p->URL,TSIZEOF(p->URL),URL);
-
-		if (stat(URL, &file_stats) == 0)
+		if (stat(url_buffer, &file_stats) == 0)
 			p->Length = file_stats.st_size;
-
 	}
 	return ERR_NONE;
 }
