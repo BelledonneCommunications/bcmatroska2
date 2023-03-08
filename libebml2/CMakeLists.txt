@@ -20,7 +20,7 @@
 #
 ############################################################################
 
-add_library(ebml2-objects OBJECT
+add_library(bcmatroska2-ebml-objects OBJECT
 	ebmlmain.c
 	ebmlelement.c
 	ebmlmaster.c
@@ -31,7 +31,7 @@ add_library(ebml2-objects OBJECT
 	ebmldate.c
 	ebmlvoid.c
 )
-set_target_properties(ebml2-objects PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(bcmatroska2-ebml-objects PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 install(DIRECTORY ebml
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

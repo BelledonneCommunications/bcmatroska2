@@ -1,6 +1,6 @@
 ############################################################################
 # CMakeLists.txt
-# Copyright (C) 2016  Belledonne Communications, Grenoble France
+# Copyright (C) 2016-2023  Belledonne Communications, Grenoble France
 #
 ############################################################################
 #
@@ -32,48 +32,43 @@ if(WIN32 AND NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsPhone" AND NOT CMAKE_SYSTEM_
 endif()
 
 string(REPLACE ";" " " LINK_FLAGS_STR "${LINK_FLAGS}")
-if(ENABLE_STATIC)
-	add_library(bcmatroska2 STATIC $<TARGET_OBJECTS:corec-objects> $<TARGET_OBJECTS:ebml2-objects> ${MATROSKA2_SOURCE_FILES})
-	set_target_properties(bcmatroska2 PROPERTIES OUTPUT_NAME bcmatroska2)
-	set_target_properties(bcmatroska2 PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-	if(NOT "${LINK_FLAGS_STR}" STREQUAL "")
-		set_target_properties(bcmatroska2 PROPERTIES LINK_FLAGS "${LINK_FLAGS_STR}")
-	endif()
-	target_include_directories(bcmatroska2 PRIVATE ../libebml2 .)
-	if(LIBS)
-		target_link_libraries(bcmatroska2 ${LIBS})
-	endif()
-	install(TARGETS bcmatroska2 EXPORT BcMatroska2Targets
-		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-	)
+add_library(bcmatroska2 $<TARGET_OBJECTS:bcmatroska2-corec-objects> $<TARGET_OBJECTS:bcmatroska2-ebml-objects> ${MATROSKA2_SOURCE_FILES})
+set_target_properties(bcmatroska2 PROPERTIES VERSION 0.0.0 SOVERSION 0)
+set_target_properties(bcmatroska2 PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+if(NOT "${LINK_FLAGS_STR}" STREQUAL "")
+	set_target_properties(bcmatroska2 PROPERTIES LINK_FLAGS "${LINK_FLAGS_STR}")
 endif()
-if(ENABLE_SHARED)
-	add_library(bcmatroska2 SHARED $<TARGET_OBJECTS:corec-objects> $<TARGET_OBJECTS:ebml2-objects> ${MATROSKA2_SOURCE_FILES})
-	set_target_properties(bcmatroska2 PROPERTIES VERSION 0.0.0 SOVERSION 0)
-	set_target_properties(bcmatroska2 PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-	if(NOT "${LINK_FLAGS_STR}" STREQUAL "")
-		set_target_properties(bcmatroska2 PROPERTIES LINK_FLAGS "${LINK_FLAGS_STR}")
-	endif()
-	target_include_directories(bcmatroska2 PRIVATE ../libebml2 .)
-	if(LIBS)
-		target_link_libraries(bcmatroska2 ${LIBS})
-	endif()
-	if(MSVC)
-		if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-			install(FILES $<TARGET_PDB_FILE:bcmatroska2>
-				DESTINATION ${CMAKE_INSTALL_BINDIR}
-				PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-			)
-		endif()
-	endif()
-	install(TARGETS bcmatroska2 EXPORT BcMatroska2Targets
-		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-	)
+target_include_directories(bcmatroska2 PRIVATE ../libebml2 .)
+target_include_directories(bcmatroska2 INTERFACE
+	$<INSTALL_INTERFACE:include/>
+	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libmatroska2>
+	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libebml2>
+	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/corec>
+	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/corec/tools/coremake>
+	$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+	PRIVATE ../libebml2 .
+)
+target_link_libraries(bcmatroska2 PUBLIC ${BCTOOLBOX_CORE_LIBRARIES})
+if(LIBS)
+	target_link_libraries(bcmatroska2 PRIVATE ${LIBS})
 endif()
+
+if(MSVC AND BUILD_SHARED_LIBS)
+	if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+		install(FILES $<TARGET_PDB_FILE:bcmatroska2>
+			DESTINATION ${CMAKE_INSTALL_BINDIR}
+			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+		)
+	endif()
+endif()
+
+install(TARGETS bcmatroska2 EXPORT BcMatroska2Targets
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+)
 
 install(DIRECTORY matroska
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

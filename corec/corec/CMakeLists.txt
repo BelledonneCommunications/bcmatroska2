@@ -52,7 +52,6 @@ if(WIN32)
 else()
 	list(APPEND COREC_SOURCES
 		helpers/date/date_libc.c
-		helpers/file/file_libc.c
 		helpers/file/file_bctbx.c
 		multithread/multithread_pthread.c
 	)
@@ -90,9 +89,9 @@ if(CONFIG_STDIO)
 	)
 endif()
 
-add_library(corec-objects OBJECT ${COREC_SOURCES})
-set_target_properties(corec-objects PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-target_include_directories(corec-objects PRIVATE
+add_library(bcmatroska2-corec-objects OBJECT ${COREC_SOURCES})
+set_target_properties(bcmatroska2-corec-objects PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+target_include_directories(bcmatroska2-corec-objects PRIVATE
                 $<TARGET_PROPERTY:bctoolbox,INTERFACE_INCLUDE_DIRECTORIES>)
 
 install(FILES

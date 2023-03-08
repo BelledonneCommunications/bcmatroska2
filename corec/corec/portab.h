@@ -769,7 +769,7 @@ ASSERT_DLL void _Assert(const char* Exp, const char* File, int Line);
 #define UNUSED_PARAM(x) (x)
 #endif
 
-#include "config.h"
+#include "bcmatroska2_config.h"
 #if defined(COREMAKE_CONFIG_HELPER)
 #include "config_helper.h"
 #else /* COREMAKE_CONFIG_HELPER */

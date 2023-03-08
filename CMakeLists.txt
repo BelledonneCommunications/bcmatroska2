@@ -1,6 +1,6 @@
 ############################################################################
 # CMakeLists.txt
-# Copyright (C) 2016-2018  Belledonne Communications, Grenoble France
+# Copyright (C) 2016-2023  Belledonne Communications, Grenoble France
 #
 ############################################################################
 #
@@ -27,8 +27,6 @@ project(bcmatroska2
 	LANGUAGES C
 )
 
-option(ENABLE_SHARED "Build shared library." YES)
-option(ENABLE_STATIC "Build static library." YES)
 option(CONFIG_EBML_WRITING "Enable EBML file writing support" ON)
 option(CONFIG_EBML_UNICODE "Enable Unicode support" ON)
 option(CONFIG_DEBUGCHECKS "Enable internal checks" ON)
@@ -43,12 +41,17 @@ if(NOT CMAKE_INSTALL_RPATH AND CMAKE_INSTALL_PREFIX)
 	message(STATUS "Setting install rpath to ${CMAKE_INSTALL_RPATH}")
 endif()
 
-configure_file(config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
+configure_file(config.h.cmake ${PROJECT_BINARY_DIR}/bcmatroska2_config.h)
 
-find_package(bctoolbox REQUIRED CONFIG)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+find_package(BcToolbox)
+if(NOT BCTOOLBOX_FOUND)
+	find_package(bctoolbox REQUIRED CONFIG)
+endif()
 
 include_directories(
-	${CMAKE_BINARY_DIR}
+	${PROJECT_BINARY_DIR}
 	corec
 )
 
@@ -62,10 +65,10 @@ endif()
 string(REPLACE ";" " " LINK_FLAGS_STR "${LINK_FLAGS}")
 
 if(WIN32)
-	add_definitions(
-		"-DEBML2_EXPORTS"
-		"-DMATROSKA2_EXPORTS"
-		"-DSTR_EXPORTS"
+	add_compile_definitions(
+		"EBML2_EXPORTS"
+		"MATROSKA2_EXPORTS"
+		"STR_EXPORTS"
 	)
 endif()
 add_compile_options(-w)
@@ -74,7 +77,7 @@ add_subdirectory(corec/corec)
 add_subdirectory(libebml2)
 add_subdirectory(libmatroska2)
 
-install(FILES ${CMAKE_BINARY_DIR}/config.h
+install(FILES ${PROJECT_BINARY_DIR}/bcmatroska2_config.h
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/corec
 )
 
@@ -82,17 +85,13 @@ include(CMakePackageConfigHelpers)
 set(CONFIG_PACKAGE_LOCATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake")
 
 write_basic_package_version_file(
-	${CMAKE_BINARY_DIR}/BcMatroska2ConfigVersion.cmake
+	${PROJECT_BINARY_DIR}/BcMatroska2ConfigVersion.cmake
 	VERSION ${MATROSKA2_VERSION}
 	COMPATIBILITY AnyNewerVersion
 )
 
-export(EXPORT BcMatroska2Targets
-	FILE "${CMAKE_CURRENT_BINARY_DIR}/BcMatroska2Targets.cmake"
-)
-
 configure_package_config_file(BcMatroska2Config.cmake.in
-	"${CMAKE_CURRENT_BINARY_DIR}/BcMatroska2Config.cmake"
+	"${PROJECT_BINARY_DIR}/BcMatroska2Config.cmake"
 	INSTALL_DESTINATION ${CONFIG_PACKAGE_LOCATION}
 	NO_SET_AND_CHECK_MACRO
 )
@@ -102,8 +101,8 @@ install(EXPORT BcMatroska2Targets
 	DESTINATION ${CONFIG_PACKAGE_LOCATION}
 )
 install(FILES
-	${CMAKE_BINARY_DIR}/BcMatroska2ConfigVersion.cmake
-	${CMAKE_BINARY_DIR}/BcMatroska2Config.cmake
+	${PROJECT_BINARY_DIR}/BcMatroska2ConfigVersion.cmake
+	${PROJECT_BINARY_DIR}/BcMatroska2Config.cmake
 	DESTINATION ${CONFIG_PACKAGE_LOCATION}
 )
 

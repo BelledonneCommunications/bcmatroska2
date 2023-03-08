@@ -27,7 +27,7 @@
  *
  ****************************************************************************/
 
-#include "config.h"
+#include "bcmatroska2_config.h"
 
 #ifdef CONFIG_FILEPOS_64
 #define __USE_FILE_OFFSET64
