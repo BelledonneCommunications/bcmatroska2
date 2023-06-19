@@ -49,7 +49,7 @@ target_include_directories(bcmatroska2 INTERFACE
 	$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
 	PRIVATE ../libebml2 .
 )
-target_link_libraries(bcmatroska2 PUBLIC ${BCTOOLBOX_CORE_LIBRARIES})
+target_link_libraries(bcmatroska2 PUBLIC ${BCToolbox_TARGET})
 if(LIBS)
 	target_link_libraries(bcmatroska2 PRIVATE ${LIBS})
 endif()
@@ -63,7 +63,7 @@ if(MSVC AND BUILD_SHARED_LIBS)
 	endif()
 endif()
 
-install(TARGETS bcmatroska2 EXPORT BcMatroska2Targets
+install(TARGETS bcmatroska2 EXPORT ${PROJECT_NAME}Targets
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

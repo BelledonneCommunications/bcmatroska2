@@ -22,7 +22,7 @@
 
 cmake_minimum_required(VERSION 3.1)
 
-project(bcmatroska2
+project(BCMatroska2
 	VERSION 0.23
 	LANGUAGES C
 )
@@ -43,12 +43,7 @@ endif()
 
 configure_file(config.h.cmake ${PROJECT_BINARY_DIR}/bcmatroska2_config.h)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-find_package(BcToolbox)
-if(NOT BCTOOLBOX_FOUND)
-	find_package(bctoolbox REQUIRED CONFIG)
-endif()
+find_package(BCToolbox 5.3.0 REQUIRED)
 
 include_directories(
 	${PROJECT_BINARY_DIR}
@@ -81,29 +76,25 @@ install(FILES ${PROJECT_BINARY_DIR}/bcmatroska2_config.h
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/corec
 )
 
+add_subdirectory(build)
+
 include(CMakePackageConfigHelpers)
-set(CONFIG_PACKAGE_LOCATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake")
-
-write_basic_package_version_file(
-	${PROJECT_BINARY_DIR}/BcMatroska2ConfigVersion.cmake
-	VERSION ${MATROSKA2_VERSION}
-	COMPATIBILITY AnyNewerVersion
-)
-
-configure_package_config_file(BcMatroska2Config.cmake.in
-	"${PROJECT_BINARY_DIR}/BcMatroska2Config.cmake"
-	INSTALL_DESTINATION ${CONFIG_PACKAGE_LOCATION}
+set(CMAKE_MODULES_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake")
+configure_package_config_file("${PROJECT_NAME}Config.cmake.in" "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+	INSTALL_DESTINATION "${CMAKE_MODULES_INSTALL_DIR}"
 	NO_SET_AND_CHECK_MACRO
 )
-
-install(EXPORT BcMatroska2Targets
-	FILE BcMatroska2Targets.cmake
-	DESTINATION ${CONFIG_PACKAGE_LOCATION}
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY AnyNewerVersion
 )
 install(FILES
-	${PROJECT_BINARY_DIR}/BcMatroska2ConfigVersion.cmake
-	${PROJECT_BINARY_DIR}/BcMatroska2Config.cmake
-	DESTINATION ${CONFIG_PACKAGE_LOCATION}
+	"${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+	"${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+	DESTINATION ${CMAKE_MODULES_INSTALL_DIR}
 )
 
-add_subdirectory(build)
+install(EXPORT ${PROJECT_NAME}Targets
+	FILE "${PROJECT_NAME}Targets.cmake"
+	DESTINATION ${CMAKE_MODULES_INSTALL_DIR}
+)

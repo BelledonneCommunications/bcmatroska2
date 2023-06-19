@@ -1,5 +1,5 @@
 ############################################################################
-# BcMatroska2Config.cmake
+# BCMatroska2Config.cmake
 # Copyright (C) 2015-2023  Belledonne Communications, Grenoble France
 #
 ############################################################################
@@ -20,25 +20,32 @@
 #
 ############################################################################
 #
-# Config file for the Matroska2 package.
-# It defines the following variables:
+# Config file for the bcmatroska2 package.
 #
-#  BCMATROSKA2_FOUND - system has BcMatroska2
-#  BCMATROSKA2_INCLUDE_DIRS - the BcMatroska2 include directory
-#  BCMATROSKA2_LIBRARIES - The libraries needed to use BcMatroska2
+# Targets
+# ^^^^^^^
+#
+# The following targets are defined:
+#  bcmatroska2 - The bcmatroska2 library target
+#
+#
+# Result variables
+# ^^^^^^^^^^^^^^^^
+#
+# This config file will set the following variables in your project:
+#
+#  BCMatroska2_FOUND - The bcmatroska2 library has been found
+#  BCMatroska2_TARGET - The name of the CMake target for the bcmatroska2 library
+
 
 @PACKAGE_INIT@
 
-include("${CMAKE_CURRENT_LIST_DIR}/BcMatroska2Targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/BCMatroska2Targets.cmake")
 
-set(BCMATROSKA2_TARGETNAME "bcmatroska2")
+set(BCMatroska2_TARGET bcmatroska2)
 
-if(@BUILD_SHARED_LIBS@)
-	set(BCMATROSKA2_LIBRARIES "${BCMATROSKA2_TARGETNAME}")
-else()
-	get_target_property(BCMATROSKA2_LIBRARIES ${BCMATROSKA2_TARGETNAME} LOCATION)
-endif()
+# We must propagate the public dependencies and the private dependencies for static build
+include(CMakeFindDependencyMacro)
+find_dependency(BCToolbox)
 
-set(BCMATROSKA2_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@")
-
-set(BCMATROSKA2_FOUND 1)
+check_required_components(BCMatroska2)
