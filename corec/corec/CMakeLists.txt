@@ -52,7 +52,6 @@ if(WIN32)
 else()
 	list(APPEND COREC_SOURCES
 		helpers/date/date_libc.c
-		helpers/file/file_libc.c
 		helpers/file/file_bctbx.c
 		multithread/multithread_pthread.c
 	)
