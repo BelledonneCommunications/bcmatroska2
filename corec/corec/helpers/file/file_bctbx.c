@@ -121,7 +121,7 @@ static err_t Open(filestream* p, const tchar_t* URL, int Flags)
 static err_t Read(filestream* p,void* Data,size_t Size,size_t* Readed)
 {
 	err_t Err;
-	int n = bctbx_file_read2(p->fp, Data, (unsigned int)Size);
+	ssize_t n = bctbx_file_read2(p->fp, Data, Size);
 	if (n<0)
 	{
 		n=0;
@@ -131,7 +131,7 @@ static err_t Read(filestream* p,void* Data,size_t Size,size_t* Readed)
 		Err = ((size_t)n != Size) ? ERR_END_OF_FILE:ERR_NONE;
 
 	if (Readed)
-		*Readed = n;
+		*Readed = (size_t)n;
 	return Err;
 }
 
@@ -143,7 +143,7 @@ static err_t ReadBlock(filestream* p,block* Block,size_t Ofs,size_t Size,size_t*
 static err_t Write(filestream* p,const void* Data,size_t Size,size_t* Written)
 {
 	err_t Err;
-	int n = bctbx_file_write2(p->fp, Data, (unsigned int)Size);
+	ssize_t n = bctbx_file_write2(p->fp, Data, Size);
 
 	if (n<0)
 	{
@@ -154,7 +154,7 @@ static err_t Write(filestream* p,const void* Data,size_t Size,size_t* Written)
 		Err = (n != Size) ? ERR_WRITE:ERR_NONE;
 
 	if (Written)
-		*Written = n;
+		*Written = (size_t)n;
 	return Err;
 }
 
