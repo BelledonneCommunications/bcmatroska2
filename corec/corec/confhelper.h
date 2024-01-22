@@ -55,7 +55,7 @@
 #define CONFIG_UNALIGNED_ACCESS /* pointers can use unaligned memory */
 #endif
 
-#if defined(TARGET_WIN32) || defined(TARGET_WIN64) || defined(TARGET_WINCE) || defined(TARGET_OSX) || defined(TARGET_LINUX)
+#if (!defined(CONFIG_FILEPOS_64)) && ( defined(TARGET_WIN32) || defined(TARGET_WIN64) || defined(TARGET_WINCE) || defined(TARGET_OSX) || defined(TARGET_LINUX))
 #define CONFIG_FILEPOS_64 /* platforms where 64 bits file position/size should be favoured */
 #endif
 
