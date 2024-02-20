@@ -91,8 +91,7 @@ endif()
 
 add_library(bcmatroska2-corec-objects OBJECT ${COREC_SOURCES})
 set_target_properties(bcmatroska2-corec-objects PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-target_include_directories(bcmatroska2-corec-objects PRIVATE
-                $<TARGET_PROPERTY:bctoolbox,INTERFACE_INCLUDE_DIRECTORIES>)
+target_link_libraries(bcmatroska2-corec-objects PUBLIC ${BCToolbox_TARGET})
 
 install(FILES
 	banned.h
