@@ -146,7 +146,7 @@ void EBML_MasterSort(ebml_master *Element, arraycmp Cmp, const void* CmpParam)
     if (Cmp)
         ArraySort(&Elts,ebml_element*,Cmp,CmpParam,0);
     else
-        ArraySort(&Elts,ebml_element*,EbmlCmp,Element,0);
+        ArraySort(&Elts,ebml_element*,(arraycmp)EbmlCmp,Element,0);
 
     // refill the master with the new order
     EBML_MasterClear(Element);
