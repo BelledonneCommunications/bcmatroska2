@@ -54,15 +54,6 @@ include_directories(
 	corec
 )
 
-set(LINK_FLAGS )
-if(APPLE)
-	list(APPEND LINK_FLAGS "-framework Foundation")
-	if(IOS)
-		list(APPEND LINK_FLAGS "-framework CoreFoundation")
-	endif()
-endif()
-string(REPLACE ";" " " LINK_FLAGS_STR "${LINK_FLAGS}")
-
 if(WIN32)
 	add_compile_definitions(
 		"EBML2_EXPORTS"

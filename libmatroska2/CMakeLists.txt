@@ -31,12 +31,14 @@ if(WIN32 AND NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsPhone" AND NOT CMAKE_SYSTEM_
 	list(APPEND LIBS Winmm)
 endif()
 
-string(REPLACE ";" " " LINK_FLAGS_STR "${LINK_FLAGS}")
 add_library(bcmatroska2 $<TARGET_OBJECTS:bcmatroska2-corec-objects> $<TARGET_OBJECTS:bcmatroska2-ebml-objects> ${MATROSKA2_SOURCE_FILES})
 set_target_properties(bcmatroska2 PROPERTIES VERSION 0.0.0 SOVERSION 0)
 set_target_properties(bcmatroska2 PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-if(NOT "${LINK_FLAGS_STR}" STREQUAL "")
-	set_target_properties(bcmatroska2 PROPERTIES LINK_FLAGS "${LINK_FLAGS_STR}")
+if(APPLE)
+	target_link_libraries(bcmatroska2 PRIVATE "-framework Foundation")
+	if(IOS)
+		target_link_libraries(bcmatroska2 PRIVATE "-framework CoreFoundation")
+	endif()
 endif()
 target_include_directories(bcmatroska2 PRIVATE ../libebml2 .)
 target_include_directories(bcmatroska2 INTERFACE
@@ -55,12 +57,11 @@ if(LIBS)
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
-	if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-		install(FILES $<TARGET_PDB_FILE:bcmatroska2>
-			DESTINATION ${CMAKE_INSTALL_BINDIR}
-			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-		)
-	endif()
+	install(FILES $<TARGET_PDB_FILE:bcmatroska2>
+		DESTINATION ${CMAKE_INSTALL_BINDIR}
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+		CONFIGURATIONS Debug RelWithDebInfo
+	)
 endif()
 
 install(TARGETS bcmatroska2 EXPORT ${PROJECT_NAME}Targets
